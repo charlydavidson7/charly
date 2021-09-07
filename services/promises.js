@@ -34,3 +34,5 @@ async function trigger () {
   getPost()
 }
 trigger()
+
+module.exports = { trigger, addPost, getPost, err, postData }

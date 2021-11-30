@@ -1,0 +1,263 @@
+Node
+------
+npm -init  -- -create package.json
+
+
+setInterval and setTimeout in node js
+
+If we going to search inspect of any website and type window we can see the properties of js.
+in node js we used global.  -- instead of document. or windwod. ...
+
+for importing any module/packageinstead of import
+
+const path = require("path");
+
+require("fs") -- for styling , directory creating.
+
+fs.writeFile(path.join(__dirname, "/api", "sample.txt"), `Username : ${user}` , (error) =>{
+    if(error) throw error;
+    });
+
+
+const path = require("path"); // import path
+const fs = require("fs");
+const EventEmitter = require("events"); // EventEitter is a class
+
+const eventEmitter = new EventEmitter();
+
+
+eventEmitter.on("message", (data) => {
+console.log(data.text);
+})
+//console.log(path)
+eventEmitter.emit("message", {text : "User logged"}); // 1st parameter is event name and second can be value(object or anything)
+eventEmitter.emit("message", {text : "User logged out"}); 
+console.log(path.dirname(__filename));
+
+/*  fs.mkdir(path.join(__dirname, "/api"), {}, (error) =>{
+if(error) throw error;
+});  */
+const user = "Arun"
+const user2 = "Anand"
+/* fs.writeFile(path.join(__dirname, "/api", "sample.txt"), `Username : ${user}` , (error) =>{
+    if(error) throw error;  // will get update existing data
+    });
+
+    fs.appendFile(path.join(__dirname, "/api", "sample.txt"), ` \n Username : ${user2}` , (error) =>{
+        if(error) throw error;  // will get update existing data
+        });
+
+        fs.readFile(path.join(__dirname, "/api", "sample.txt"), "utf8" , (error,data) =>{
+            if(error) throw error; 
+            console.log(data) // will get update existing data
+            }); */
+
+    
+//console.log(path.join(__dirname, "script", "script.js"));
+/* const interval = setInterval(() => {
+    console.log("Checking")
+}, 1000);
+setTimeout( () => {
+clearInterval(interval);
+},2000) */
+
+Http in node js
+----------------
+
+nodemon is a tool that helps develop node. js based applications by automatically restarting the node application 
+when file changes in the directory are detected.
+
+npm install nodemon
+
+In packagejson file:   "scripts": {
+    "start": "node script2",
+    "dev": "nodemon script2"
+  }, -- have to specify.
+
+npm run dev
+
+const http = require("http");
+const path = require("path");
+const fs = require("fs");
+
+const server = http.createServer((req,res) => {
+fs.readFile(path.join(__dirname,"/api", "index.html"), "utf8", (err,data) => {
+    res.writeHead(200, {"Content-Type": "text/html"});
+    res.end(data);
+})
+});
+const PORT = 3001;
+server.listen(PORT, () => {console.log(`Server port ${PORT} running`)});
+
+Passing data from one js to onother
+----
+module.exports = {
+functionName,variable Name
+}
+
+Express js  --- simplifying node js.
+----------
+npm install express --- inside folder.
+simplify the http commands and all. (writehead and all no need to specify)
+
+Express js middware.
+-----------
+Suppose while sending request qe need to pass a token to login page, for that and all we can use middleware functions.
+
+Application level middleware -- if there any common function need to execute for all, we can use this
+
+Child process in node
+------------------------
+Probably node js is single thread application. but using child process we can execute process simultaniously sync or async.
+
+If there is long computation and all we need to use child process. less time for computing, will create a seperate thread for executing child process.
+1. exec
+2. execfile  --- path couldnt able to specify.
+3. spawn --- for large files and all retrieving. 
+4. fork
+
+
+
+ffi-napi --- To communicate with cpp, dlls.
+
+-------------------------
+npm install ffi-napi
+
+const ffi = require('ffi-napi');
+
+const master = ffi.Library('libmylibrarary', {
+'main' : ["double", ["double","int"]]
+});
+
+master.main(2.5,1);
+//ffi.Library(libraryFile, { functionSymbol: [ returnType, [ arg1Type, arg2Type, ... ], ... ]);
+
+
+Callbackfunction, async promise await.
+
+Promises : Resolve, Reject.
+if success == .then
+if reject .catch
+
+
+ES-Lint
+------------
+
+Add extension 
+npm install --save-dev eslint
+npx eslint --init -- initialize.
+
+suppose some specific method while calling we need to throw a error this method cannot be used. 
+
+in package json file add lint
+
+  "scripts": {
+    "start": "node middleware",
+    "dev": "nodemon middleware",
+    "lint": "eslint ./"
+  },
+
+.eslintignore : the files or folders which no need to apply eslint have to specify here.
+"lint": "eslint js --rulesdir api/rules"
+
+eg : 
+module.exports = {
+    create(context) {
+        return {
+            CallExpression(node) {
+                // eslint-disable-next-line keyword-spacing
+                if(node.CallExpression.name === 'getRestrictedData') {
+                    context.report({
+                        node: node,
+                        message: "getRestrictedData is deprecated use other method"
+                    });
+                }
+            }
+        }
+    }
+}
+
+add rule filename in eslintrc.json.
+
+
+node js testing frameworks mocha- chai.
+--------------------------
+Node – Mocha(Framework), chai (Assertion) , sinon(For stubs and mocks etc.)
+
+npm install --save-dev mocha chai nyc
+nyc for coverage check.
+npm install sinon
+npm instal sinon-chai
+
+"test": "mocha tests" -- In package.json
+"coverage": "nyc --reporter=html npm run test",
+
+For testing app.get, app.post we can use npm install supertest or chai-http
+
+npm install chai-http
+
+const index = require('../routes/index')
+const chai = require('chai')
+const chaihttp = require('chai-http')
+
+chai.use(chaihttp)
+
+const expect = chai.expect
+
+describe('index page should render', () => {
+  it('should render user page', (done) => {
+    chai.request(index).get('/').end((_err, res) => {
+      expect(_err).to.be.null
+      done()
+    })
+  })
+  it('should render getuser page', (done) => {
+    chai.request(index).get('/user').query({ name: 'foo', limit: 10 }).end((err, res) => {
+      expect(res.status).to.be.eq(200)
+      done()
+    })
+  })
+})
+
+.equals('')
+.equal(object)
+
+
+Node.js Socket IO
+------------------
+Socket.io is a library fro creating (Client/Server) structure where lot of clients can use
+ Web sockets to connect to a server and being able to exchange realtime data. chatmessages, apis
+
+https://socket.io
+
+server and client will be there
+
+server
+
+1. A connection port create with socket
+
+io.on('connection', ())
+
+2. emit data
+
+client
+
+1. connect to the server
+2. recive data by using on
+
+
+https://github.com/syamniravilpuzha/postfeeds/tree/main/postfeeds
+
+npm install --save-dev babel-preset-es2015-native-modules
+
+npm async , child process.
+
+
+async waterfall and async foreach (refer code)
+
+Difference between async parallel and waterfall.
+
+Suppose while executing multiple tasks if any of callback function return error then if we using waterfall, it will stop execution there,
+ but if we using parallel all the functions running parallely so it the remains will execute.
+
+Express generator -- framework
